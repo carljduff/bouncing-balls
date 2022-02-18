@@ -45,6 +45,7 @@ class Ball extends Shape {
         super(x, y, velX, velY); 
         this.color = color; 
         this.size = size;
+        this.exists = true;
     }
 
     draw() {
@@ -87,7 +88,7 @@ class Ball extends Shape {
         //algorithm that works by taking the center points of the two circles
         //and ensuring the distance between the center points are less than the two radii added together
         for (const ball of balls) {
-            if (!(this === ball)) {
+            if (!(this === ball) && ball.exists) {
                 const dx = this.x - ball.x;
                 const dy = this.y - ball.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
@@ -106,26 +107,10 @@ class Ball extends Shape {
 class EvilOne extends Ball {
     constructor(x, y) {
         //calls the Ball constructor 
-        super(x, y, 5, 5); 
+        super(x, y, 20, 20); 
         this.color = 'green';
         this.size = 30;
 
-       /* window.addEventListener("keydown", (event) => {
-            switch (event.key) {
-               case 37:
-                this.velX = -(this.velX);;
-               break;
-               case 38:
-                this.velY = -(this.velY);;
-               break;
-               case 39:
-                this.velX = -(this.velX);
-               break;
-               case 40:
-                this.velY = -(this.velY);
-               break;
-            }
-        })*/
     }
 
     draw() {
@@ -154,21 +139,20 @@ class EvilOne extends Ball {
             this.velY = -(this.velY);
         }
         
-        this.x += this.velX;
-        this.y += this.velY;
     
     }
 
     collisionDetect() {
         for (const ball of balls) {
-            if (!(this === ball)) {
+            if (ball.exists) {
                 const dx = this.x - ball.x;
                 const dy = this.y - ball.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < this.size + ball.size) {
                     //removes the last ball from the array
-                    balls.pop(ball);
+                    //balls.pop(ball);
+                    ball.exists = false;
                     
                 }
             }
@@ -181,7 +165,24 @@ class EvilOne extends Ball {
 const evilBall = new EvilOne(
     //starts in the top left corner
     random(0, width),
-    random(0, height)
+    random(0, height),
+
+    window.addEventListener("keydown", (event) => {
+        switch (event.key) {
+           case "ArrowLeft":
+            evilBall.x -= evilBall.velX;
+           break;
+           case "ArrowRight":
+            evilBall.x += evilBall.velX;
+           break;
+           case "ArrowUp":
+            evilBall.y -= evilBall.velY;
+           break;
+           case "ArrowDown":
+            evilBall.y += evilBall.velY;
+           break;
+        }
+    })
 );
 
 //a place to store the balls
@@ -213,10 +214,12 @@ function loop() {
     ctx.fillRect(0, 0, width, height);
 
     for (const ball of balls) {
-        //invokes the ball functions
+        if (ball.exists) {
         ball.draw();
         ball.update();
-        ball.collisionDetect();
+        ball.collisionDetect(); 
+        }
+        
         
     }
 

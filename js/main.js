@@ -1,20 +1,20 @@
 // setup canvas
-
 const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d'); //context is like a piece of paper
 
+//makes ctx like the piece of paper
+const ctx = canvas.getContext('2d'); 
+
+//making the canvas width/height change with the window width/height
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
 // function to generate random number
-
 function random(min, max) {
   const num = Math.floor(Math.random() * (max - min + 1)) + min;
   return num;
 }
 
 // function to generate random color
-
 function randomRGB() {
   return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
@@ -37,22 +37,23 @@ class Ball {
     }
 
     update() {
+        //if the x coord. is greater than the width of the canvas (the ball is going off the right edge).
         if ((this.x + this.size) >= width) {
             this.velX = -(this.velX);
         }
-
+        //if the x coord. is smaller than 0 (the ball is going off the left edge).
         if ((this.x - this.size) <= 0) {
             this.velX = -(this.velX);
         }
-
+        //if the y coord. is greater than the height of the canvas (the ball is going off the bottom edge).
         if ((this.y + this.size) >= height) {
             this.velY = -(this.velY);
         }
-
+        //if the y coord. is smaller than 0 (the ball is going off the top edge).
         if ((this.y - this.size) <= 0) {
             this.velY = -(this.velY);
         }
-
+        //adds them together..the ball is in effect moved each time this method is called.
         this.x += this.velX;
         this.y += this.velY;
     }
@@ -66,29 +67,31 @@ class Ball {
 
                 if (distance < this.size + ball.size) {
                     ball.color = this.color = randomRGB();
+                    ball.size = 35;
                 }
             }
         }
     }
 }
 
+//a place to store the balls
 const balls = [];
 
-while (balls.length < 25) {
-    const size = random(10,20);
-    const ball = new Ball(
+while (balls.length < 10) { //how many balls
+    const size = random(10,20); //controlling their size with the random function
+    const ball = new Ball( 
         random(0 + size,width - size),
         random(0 + size,height - size),
         random(-7, 7),
         random(-7, 7),
-        randomRGB(),
+        'blue',
         size
     );
     balls.push(ball);
 }
 
 function loop() {
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(0, 0, width, height);
 
     for (const ball of balls) {
@@ -100,3 +103,6 @@ function loop() {
 }
 
 loop();
+
+
+

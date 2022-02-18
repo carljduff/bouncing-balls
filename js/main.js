@@ -40,7 +40,6 @@ class Main {
 class Ball extends Main {
     constructor(x, y, velX, velY, color, size) {
         super(x, y, velX, velY);
-        this.collide = true;
         this.color = color;
         this.size = size;
     }
@@ -95,13 +94,14 @@ class EvilOne extends Main {
     constructor(x, y) {
         super(x, y, 5, 5);
         this.color = 'green';
-        this.size = 100;
+        this.size = 20;
 
 
     }
 
     draw() {
         ctx.beginPath();
+        ctx.lineWidth = 5;
         ctx.strokeStyle = this.color;
         ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
         ctx.stroke();
@@ -132,14 +132,13 @@ class EvilOne extends Main {
 
     collisionDetect() {
         for (const ball of balls) {
-            if (!(this === ball) && ball.collide) {
+            if (!(this === ball)) {
                 const dx = this.x - ball.x;
                 const dy = this.y - ball.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < this.size + ball.size) {
-                    ball.collide = false;
-                    balls.pop();
+                    balls.pop(ball);
                 }
             }
         }
@@ -156,7 +155,7 @@ const evilBall = new EvilOne(
 //a place to store the balls
 const balls = [];
 
-while (balls.length < 25) { //how many balls
+while (balls.length < 100) { //how many balls
     const size = random(5, 10); //controlling their size with the random function
     const ball = new Ball( 
         random(0 + size,width - size),

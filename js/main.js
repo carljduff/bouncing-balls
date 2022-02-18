@@ -25,30 +25,41 @@ function randomRGB() {
 }
 
 
-//Creating the parent class
+//Creating the parent class for others to inherit
 class Main {
 	constructor(x, y, velX, velY) {
-		this.x = x;
+        //x & y state where the ball starts on the screen
+		this.x = x; 
 		this.y = y;
+        //velX & velY is for velocity
 		this.velX = velX;
 		this.velY = velY;
 	}
 }
 
 
-//Creating a ball class so it can have it's own properties... 
+//Creating a ball class so it can have it's own properties and behaviors by achieving...
+//inheritance from class Main 
 class Ball extends Main {
-    constructor(x, y, velX, velY, color, size) {
-        super(x, y, velX, velY);
-        this.color = color;
+    //still have assign the parameters from parent constructor, but can add additional
+    constructor(x, y, velX, velY, color, size) { 
+        //calls the parent constructor
+        super(x, y, velX, velY); 
+        this.color = color; 
         this.size = size;
     }
 
     draw() {
-        ctx.beginPath(); //states that we want to draw a shape on the paper(ctx).
-        ctx.fillStyle = this.color; //defines what color we want the shape to be... "this.color" sets it to the ball's color property.
-        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI); //traces an arc shape on the paper. X & Y position of the arc's center, specifying their properties. The radius is the ball's size property. The last two parameters specify the start and end number of degrees around the circle that the arc is drawn betwee. 0 degrees and 2 * PI is 360 degrees in radians which is a circle. 
-        ctx.fill(); //fills the area of the circle with the color specified in fillStyle.
+        //states that we want to draw a shape on the paper(ctx).
+        ctx.beginPath(); 
+        //defines what color we want the shape to be... "this.color" sets it to the ball's color property.
+        ctx.fillStyle = this.color;
+        //traces an arc shape on the paper. X & Y position of the arc's center, specifying their properties. The radius is the ball's size property. 
+        //The last two parameters specify the start and end number of degrees around the circle that the arc is drawn between, 0 degrees 
+        //and 2 * PI is 360 degrees in radians which is a circle. 
+        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI); 
+        //fills the area of the circle with the color specified in fillStyle.
+        ctx.fill(); 
     }
 
     update() {
@@ -68,12 +79,14 @@ class Ball extends Main {
         if ((this.y - this.size) <= 0) {
             this.velY = -(this.velY);
         }
-        //adds them together..the ball is in effect moved each time this method is called.
+        //adds where the balls start and their velocity to move them by this much on each frame.
         this.x += this.velX;
         this.y += this.velY;
     }
 
     collisionDetect() {
+        //algorithm that works by taking the center points of the two circles
+        //and ensuring the distance between the center points are less than the two radii added together
         for (const ball of balls) {
             if (!(this === ball)) {
                 const dx = this.x - ball.x;
@@ -82,19 +95,21 @@ class Ball extends Main {
 
                 if (distance < this.size + ball.size) {
                     ball.color = this.color = randomRGB();
-                    ball.size = random(5, 20);
+                    //when balls collide, their size randomly change
+                    ball.size = this.size = random(5, 20);
                 }
             }
         }
     }
 }
 
-
+//new class inherited from Main
 class EvilOne extends Main {
     constructor(x, y) {
-        super(x, y, 5, 5);
+        //calls the parent constructor 
+        super(x, y, 5, 5); 
         this.color = 'green';
-        this.size = 20;
+        this.size = 30;
 
 
     }
@@ -138,6 +153,7 @@ class EvilOne extends Main {
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < this.size + ball.size) {
+                    //removes the last ball from the array
                     balls.pop(ball);
                 }
             }
@@ -146,8 +162,9 @@ class EvilOne extends Main {
     
 }
 
-
+//creating a new instance of EvilOne
 const evilBall = new EvilOne(
+    //starts in the top left corner
     random(0, width),
     random(0, height)
 );
@@ -155,39 +172,49 @@ const evilBall = new EvilOne(
 //a place to store the balls
 const balls = [];
 
-while (balls.length < 100) { //how many balls
-    const size = random(5, 10); //controlling their size with the random function
+//how many balls
+while (balls.length < 100) { 
+    const size = random(5, 10);
+    //create a new instance of Ball
+    //ball position always drawn at least one ball width
+    //away from the edge of the cavas to avoid drawing errors
     const ball = new Ball( 
         random(0 + size,width - size),
         random(0 + size,height - size),
         random(-7, 7),
         random(-7, 7),
-        'blue',
+        //changed starting color to blue
+        'white',
         size
     );
-    balls.push(ball);
+    balls.push(ball); 
 }
 
 function loop() {
+    //sets the canvas fill color to semi-transparent black
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    //draws a rectangle of the color across the whole width/height
+    //of the canvas. It covers up the previous frame's drawing before the next is drawn.
     ctx.fillRect(0, 0, width, height);
 
     for (const ball of balls) {
+        //invokes the ball functions
         ball.draw();
         ball.update();
         ball.collisionDetect();
+        
     }
 
-evilBall.draw();
-evilBall.updateEvilOne();
-evilBall.collisionDetect();
+    evilBall.draw();
+    evilBall.updateEvilOne();
+    evilBall.collisionDetect();
+    
     requestAnimationFrame(loop);
     
 }  
+
+
+
+//starts the program
 loop();
-
-
-
-
-
 

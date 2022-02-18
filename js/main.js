@@ -188,7 +188,7 @@ const evilBall = new EvilOne(
 const balls = [];
 
 //how many balls
-while (balls.length < 25) { 
+while (balls.length < 50) { 
     const size = random(5, 10);
     //create a new instance of Ball
     //ball position always drawn at least one ball width

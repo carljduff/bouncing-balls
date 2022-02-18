@@ -8,10 +8,10 @@ const ctx = canvas.getContext('2d');
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
-let rightPressed = false;
+/*let rightPressed = false;
 let leftPressed = false;
 document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);*/
 
 // function to generate random number
 function random(min, max) {
@@ -40,6 +40,7 @@ class Main {
 class Ball extends Main {
     constructor(x, y, velX, velY, color, size) {
         super(x, y, velX, velY);
+        this.collide = true;
         this.color = color;
         this.size = size;
     }
@@ -92,9 +93,11 @@ class Ball extends Main {
 
 class EvilOne extends Main {
     constructor(x, y) {
-        super(x, y, 50, 50);
+        super(x, y, 5, 5);
         this.color = 'green';
-        this.size = 40;
+        this.size = 100;
+
+
     }
 
     draw() {
@@ -127,9 +130,20 @@ class EvilOne extends Main {
     
     }
 
+    collisionDetect() {
+        for (const ball of balls) {
+            if (!(this === ball) && ball.collide) {
+                const dx = this.x - ball.x;
+                const dy = this.y - ball.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-    
-    
+                if (distance < this.size + ball.size) {
+                    ball.collide = false;
+                    balls.pop();
+                }
+            }
+        }
+    }
     
 }
 
@@ -164,12 +178,12 @@ function loop() {
         ball.collisionDetect();
     }
 
-    evilBall.draw();
-    evilBall.updateEvilOne();
-
+evilBall.draw();
+evilBall.updateEvilOne();
+evilBall.collisionDetect();
     requestAnimationFrame(loop);
-}
-
+    
+}  
 loop();
 
 

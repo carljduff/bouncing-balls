@@ -8,10 +8,7 @@ const ctx = canvas.getContext('2d');
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
-/*let rightPressed = false;
-let leftPressed = false;
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);*/
+
 
 // function to generate random number
 function random(min, max) {
@@ -26,7 +23,7 @@ function randomRGB() {
 
 
 //Creating the parent class for others to inherit
-class Main {
+class Shape {
 	constructor(x, y, velX, velY) {
         //x & y state where the ball starts on the screen
 		this.x = x; 
@@ -34,14 +31,15 @@ class Main {
         //velX & velY is for velocity
 		this.velX = velX;
 		this.velY = velY;
+
 	}
 }
 
 
 //Creating a ball class so it can have it's own properties and behaviors by achieving...
-//inheritance from class Main 
-class Ball extends Main {
-    //still have assign the parameters from parent constructor, but can add additional
+//inheritance from class Shape
+class Ball extends Shape {
+    //still have to assign the parameters from parent constructor, but can add additional
     constructor(x, y, velX, velY, color, size) { 
         //calls the parent constructor
         super(x, y, velX, velY); 
@@ -79,7 +77,8 @@ class Ball extends Main {
         if ((this.y - this.size) <= 0) {
             this.velY = -(this.velY);
         }
-        //adds where the balls start and their velocity to move them by this much on each frame.
+        //adds where the balls start and their velocity to move them by this much on each frame
+        //each time this method is called
         this.x += this.velX;
         this.y += this.velY;
     }
@@ -103,15 +102,30 @@ class Ball extends Main {
     }
 }
 
-//new class inherited from Main
-class EvilOne extends Main {
+//new class inherited from Ball
+class EvilOne extends Ball {
     constructor(x, y) {
-        //calls the parent constructor 
+        //calls the Ball constructor 
         super(x, y, 5, 5); 
         this.color = 'green';
         this.size = 30;
 
-
+       /* window.addEventListener("keydown", (event) => {
+            switch (event.key) {
+               case 37:
+                this.velX = -(this.velX);;
+               break;
+               case 38:
+                this.velY = -(this.velY);;
+               break;
+               case 39:
+                this.velX = -(this.velX);
+               break;
+               case 40:
+                this.velY = -(this.velY);
+               break;
+            }
+        })*/
     }
 
     draw() {
@@ -155,6 +169,7 @@ class EvilOne extends Main {
                 if (distance < this.size + ball.size) {
                     //removes the last ball from the array
                     balls.pop(ball);
+                    
                 }
             }
         }
@@ -173,7 +188,7 @@ const evilBall = new EvilOne(
 const balls = [];
 
 //how many balls
-while (balls.length < 100) { 
+while (balls.length < 25) { 
     const size = random(5, 10);
     //create a new instance of Ball
     //ball position always drawn at least one ball width
@@ -184,7 +199,7 @@ while (balls.length < 100) {
         random(-7, 7),
         random(-7, 7),
         //changed starting color to blue
-        'white',
+        'blue',
         size
     );
     balls.push(ball); 

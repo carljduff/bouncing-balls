@@ -46,10 +46,10 @@ class Ball extends Main {
     }
 
     draw() {
-        ctx.beginPath(); // states that we want to draw a shape on the paper(ctx).
-        ctx.fillStyle = this.color; // defines what color we want the shape to be... "this.color" sets it to the ball's color property.
+        ctx.beginPath(); //states that we want to draw a shape on the paper(ctx).
+        ctx.fillStyle = this.color; //defines what color we want the shape to be... "this.color" sets it to the ball's color property.
         ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI); //traces an arc shape on the paper. X & Y position of the arc's center, specifying their properties. The radius is the ball's size property. The last two parameters specify the start and end number of degrees around the circle that the arc is drawn betwee. 0 degrees and 2 * PI is 360 degrees in radians which is a circle. 
-        ctx.fill(); // fills the area of the circle with the color specified in fillStyle.
+        ctx.fill(); //fills the area of the circle with the color specified in fillStyle.
     }
 
     update() {
@@ -146,6 +146,7 @@ class EvilOne extends Main {
     }
     
 }
+
 
 const evilBall = new EvilOne(
     random(0, width),
